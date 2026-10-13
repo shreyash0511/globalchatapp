@@ -10,31 +10,46 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
+// Serve your existing HTML, CSS, and other frontend files.
 app.use(express.static(__dirname));
 
+// Health check
 app.get("/health", (req, res) => {
     res.send("GCREVIVAL server is running!");
 });
 
+// Handle connections and broadcast messages to everyone.
 io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
 
     socket.on("chat message", (data) => {
-        if (!data ||
+        if (
+            !data ||
             typeof data.username !== "string" ||
-            typeof data.message !== "string") {
+            typeof data.message !== "string"
+        ) {
             return;
         }
 
         const username = data.username.trim().slice(0, 30);
         const message = data.message.trim().slice(0, 1000);
 
-        if (!username || !message) return;
+        if (!username || !message) {
+            return;
+        }
 
-        io.emit("chat message", { username, message });
+        io.emit("chat message", {
+            username,
+            message
+        });
+    });
+
+    socket.on("disconnect", () => {
+        console.log("A user disconnected:", socket.id);
     });
 });
 
+// Start the HTTP and Socket.IO server.
 server.listen(PORT, "0.0.0.0", () => {
     console.log(`GCREVIVAL is running on port ${PORT}`);
 });

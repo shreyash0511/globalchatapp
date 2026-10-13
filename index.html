@@ -34,63 +34,74 @@
         <h2 id="chez">Stream</h2>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const username = document.getElementById("user");
-        const message = document.getElementById("message");
-        const sendButton = document.getElementById("sendButton");
-        const chatMessages = document.getElementById("chatMessages");
+    
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const username = document.getElementById("user");
+    const message = document.getElementById("message");
+    const sendButton = document.getElementById("sendButton");
+    const chatMessages = document.getElementById("chatMessages");
 
-        const socket = io();
+    const socket = io();
+    const storageKey = "gcrevivalMessages";
 
-        socket.on("connect", function() {
-            console.log("Connected to GCREVIVAL!");
-        });
+    let messages = JSON.parse(
+        localStorage.getItem(storageKey) || "[]"
+    );
 
-        socket.on("connect_error", function(error) {
-            console.error("Socket.IO connection error:", error.message);
-        });
-
-        function displayMessage(userText, messageText) {
+    function displayMessages() {
+        messages.forEach(function(item) {
             const newMessage = document.createElement("p");
-            newMessage.textContent = userText + ": " + messageText;
+            newMessage.textContent =
+                item.username + ": " + item.message;
             chatMessages.appendChild(newMessage);
+        });
+    }
+
+    socket.on("chat message", function(data) {
+        messages.push(data);
+
+        localStorage.setItem(
+            storageKey,
+            JSON.stringify(messages)
+        );
+
+        // Refresh the page after receiving a message
+        window.location.reload();
+    });
+
+    function sendMessage() {
+        const userText = username.value.trim();
+        const messageText = message.value.trim();
+
+        if (!userText || !messageText) {
+            return;
         }
 
-        socket.on("chat message", function(data) {
-            displayMessage(data.username, data.message);
-        });
-
-        function sendMessage() {
-            const userText = username.value.trim();
-            const messageText = message.value.trim();
-
-            if (userText === "" || messageText === "") {
-                return;
-            }
-
-            if (!socket.connected) {
-                alert("Not connected to the chat server. Please try again.");
-                return;
-            }
-
-            socket.emit("chat message", {
-                username: userText,
-                message: messageText
-            });
-
-            message.value = "";
-            message.focus();
+        if (!socket.connected) {
+            alert("Not connected to the chat server!");
+            return;
         }
 
-        sendButton.addEventListener("click", sendMessage);
-
-        message.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
+        socket.emit("chat message", {
+            username: userText,
+            message: messageText
         });
-    </script>
+
+        message.value = "";
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+
+    message.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    displayMessages();
+</script>
+
 
 </body>
 </html>

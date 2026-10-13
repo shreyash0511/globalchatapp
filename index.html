@@ -35,6 +35,7 @@
     </div>
 
     
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const username = document.getElementById("user");
@@ -43,31 +44,23 @@
     const chatMessages = document.getElementById("chatMessages");
 
     const socket = io();
-    const storageKey = "gcrevivalMessages";
 
-    let messages = JSON.parse(
-        localStorage.getItem(storageKey) || "[]"
-    );
+    socket.on("connect", function() {
+        console.log("Connected to GCREVIVAL!");
+    });
 
-    function displayMessages() {
-        messages.forEach(function(item) {
-            const newMessage = document.createElement("p");
-            newMessage.textContent =
-                item.username + ": " + item.message;
-            chatMessages.appendChild(newMessage);
-        });
+    socket.on("connect_error", function(error) {
+        console.error("Socket.IO connection error:", error.message);
+    });
+
+    function displayMessage(userText, messageText) {
+        const newMessage = document.createElement("p");
+        newMessage.textContent = userText + ": " + messageText;
+        chatMessages.appendChild(newMessage);
     }
 
     socket.on("chat message", function(data) {
-        messages.push(data);
-
-        localStorage.setItem(
-            storageKey,
-            JSON.stringify(messages)
-        );
-
-        // Refresh the page after receiving a message
-        window.location.reload();
+        displayMessage(data.username, data.message);
     });
 
     function sendMessage() {
@@ -79,7 +72,7 @@
         }
 
         if (!socket.connected) {
-            alert("Not connected to the chat server!");
+            alert("Not connected to the chat server. Please try again.");
             return;
         }
 
@@ -89,6 +82,7 @@
         });
 
         message.value = "";
+        message.focus();
     }
 
     sendButton.addEventListener("click", sendMessage);
@@ -98,9 +92,8 @@
             sendMessage();
         }
     });
-
-    displayMessages();
 </script>
+
 
 
 </body>

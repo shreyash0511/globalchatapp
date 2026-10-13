@@ -1,0 +1,53 @@
+body {
+    background-color: black;
+    color: blueviolet;
+}
+
+#title {
+    color :blueviolet;
+}
+#title {
+     text-shadow: 1px 4px 6px;
+}
+#img {
+    text-align: right;
+}
+body {
+    text-align: center;
+}
+body {
+  /* Set the path to your image */
+  background-image: url('https://t4.ftcdn.net/jpg/07/51/96/11/360_F_751961137_cO7i1u5j2qyGzlJp7tTEGKDrt8BHv5iF.jpg');
+
+  /* Prevent the image from repeating like a grid */
+  background-repeat: no-repeat;
+
+  /* Scale the image to completely fill the screen */
+  background-size: cover;
+
+  /* Center the image within the viewport */
+  background-position: center;
+
+  /* Keep the background fixed in place while scrolling */
+  background-attachment: fixed;
+}
+
+#chatMessages {
+  color: blueviolet;
+  width: auto;
+  height: 65px;
+  background-color: powderblue;   
+  border: 2px solid #333333;   
+  border-radius: 50px;
+  margin: 20px auto; /* Centers the chat box on the screen */
+  background-image: url('https://cdn.mos.cms.futurecdn.net/FRdq8ZbPetwNDRV9R3hYpP.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+#chez {
+    color: darkblue;
+}
+#meslabel {
+    font-family:Arial, Helvetica, sans-serif;
+}

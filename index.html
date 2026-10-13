@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCREVIVAL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="background-color: powderblue;">
+
+    <img src="https://prestigeclient.vip/assets/img/logo.png" style="width: 200px;" id="img">
+
+    <h1 id="title">GCREVIVAL by King Shreyash</h1>
+    <div id="titleshadow"></div>
+
+    <label for="user">Username</label id="userlabel">
+    <input type="text" id="user" name="user" placeholder="Enter your username" id="user">
+
+    <h1></h1>
+
+    <label for="message">Message</label id="meslabel">
+    <input type="text" id="message" name="message" placeholder="Write your message"id="mes">
+
+    <h1></h1>
+
+    <button id="sendButton">Enter</button id-"buttonenter">
+
+    <div id="chatMessages">
+        <h2 id="chez">Stream</h2>
+    </div>
+
+    
+<script>
+    const username = document.getElementById("user");
+    const message = document.getElementById("message");
+    const sendButton = document.getElementById("sendButton");
+    const chatMessages = document.getElementById("chatMessages");
+
+    let messages = JSON.parse(localStorage.getItem("gcrevivalMessages") || "[]");
+
+    function displayMessages() {
+        messages.forEach(function(item) {
+            const newMessage = document.createElement("p");
+            newMessage.textContent = item.username + ": " + item.message;
+            chatMessages.appendChild(newMessage);
+        });
+    }
+
+    function sendMessage() {
+        const userText = username.value.trim();
+        const messageText = message.value.trim();
+
+        if (userText === "" || messageText === "") {
+            return;
+        }
+
+        const newMessage = {
+            username: userText,
+            message: messageText
+        };
+
+        messages.push(newMessage);
+        localStorage.setItem("gcrevivalMessages", JSON.stringify(messages));
+
+        const messageElement = document.createElement("p");
+        messageElement.textContent = userText + ": " + messageText;
+        chatMessages.appendChild(messageElement);
+
+        message.value = "";
+        message.focus();
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+
+    message.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    displayMessages();
+</script>
+
+
+</body>
+</html>
